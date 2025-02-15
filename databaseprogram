@@ -1,0 +1,194 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class InventoryManagementSystem {
+    static List<Product> products = new ArrayList<>();
+    static Scanner scanner = new Scanner(System.in);
+
+    private static void display() {
+        String str = " " +
+                "1. Add an item\n" +
+                "2. Display all items\n" +
+                "3. Search an item\n" +
+                "4. Delete an item\n" +
+                "5. Update an item\n" +
+                "6. Calculate inventory value\n" +
+                "7. Exit the application";
+
+        System.out.println(str);
+    }
+
+    private static void addItems() {
+        System.out.print("Enter ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter Quantity: ");
+        int quantity = scanner.nextInt();
+
+        System.out.print("Enter Price: ");
+        float price = scanner.nextFloat();
+
+        Product product = new Product(id, name, quantity, price);
+        products.add(product);
+        System.out.println("Item added successfully.");
+    }
+
+    private static void displayItems() {
+        if (products.isEmpty()) {
+            System.out.println("No products available.");
+            return;
+        }
+        System.out.println("Product List:");
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
+
+    private static void searchItem() {
+        System.out.print("Enter the product ID to search: ");
+        int searchId = scanner.nextInt();
+
+        boolean found = false;
+        for (Product product : products) {
+            if (product.id == searchId) {
+                System.out.println("Product found: " + product);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Product not found.");
+        }
+    }
+
+    private static void deleteItem() {
+        System.out.print("Enter the product ID to delete: ");
+        int deleteId = scanner.nextInt();
+
+        for (Product product : products) {
+            if (product.id == deleteId) {
+                products.remove(product);
+                System.out.println("Product deleted successfully.");
+                return;
+            }
+        }
+        System.out.println("Product not found.");
+    }
+
+    private static void updateItem() {
+        System.out.print("Enter the product ID to update: ");
+        int updateId = scanner.nextInt();
+
+        for (Product product : products) {
+            if (product.id == updateId) {
+                System.out.println("Product found: " + product);
+                System.out.println("Choose what to update:");
+                System.out.println("1. ID\n2. Name\n3. Quantity\n4. Price");
+
+                int option = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                switch (option) {
+                    case 1:
+                        System.out.print("Enter new ID: ");
+                        product.id = scanner.nextInt();
+                        break;
+                    case 2:
+                        System.out.print("Enter new Name: ");
+                        product.name = scanner.nextLine();
+                        break;
+                    case 3:
+                        System.out.print("Enter new Quantity: ");
+                        product.quantity = scanner.nextInt();
+                        break;
+                    case 4:
+                        System.out.print("Enter new Price: ");
+                        product.price = scanner.nextFloat();
+                        break;
+                    default:
+                        System.out.println("Invalid option.");
+                        return;
+                }
+                System.out.println("Product updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Product not found.");
+    }
+
+    private static void calculateTotal() {
+        float totalValue = 0;
+
+        if (products.isEmpty()) {
+            System.out.println("No products available.");
+            return;
+        }
+
+        for (Product product : products) {
+            totalValue += product.quantity * product.price;
+        }
+
+        System.out.println("Total Inventory Value: $" + totalValue);
+    }
+
+    public static void main(String[] args) {
+        int choice;
+        do {
+            display();
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    addItems();
+                    break;
+                case 2:
+                    displayItems();
+                    break;
+                case 3:
+                    searchItem();
+                    break;
+                case 4:
+                    deleteItem();
+                    break;
+                case 5:
+                    updateItem();
+                    break;
+                case 6:
+                    calculateTotal(); // Inventory value calculation
+                    break;
+                case 7:
+                    System.out.println("Exiting the application.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+            }
+        } while (choice != 7);
+    }
+}
+
+// Product class
+class Product {
+    int id;
+    String name;
+    int quantity;
+    float price;
+
+    public Product(int id, String name, int quantity, float price) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + name + ", Quantity: " + quantity + ", Price: $" + price;
+    }
+}
